@@ -1,5 +1,3 @@
-import { EventSection } from "../event-section";
-import { EventSpot } from "../event-spot";
 import { Event } from "../event.entity";
 import { PartnerId } from "../partner.entity";
 
@@ -12,17 +10,17 @@ test('Deve criar um evento', () => {
     });
 
     event.addSection({
-        name: 'Sessão 1',
-        description: 'Descrição da sessão 1',
+        name: 'Seção 1',
+        description: 'Descrição da seção 1',
         total_spots: 100,
         price: 1000
     });
 
     const [section] = event.sections;
 
-    expect(event.sections.size).toBe(1);
+    expect(event.sections.count()).toBe(1);
     expect(event.total_spots).toBe(100);
-    expect(section.spots.size).toBe(100);
+    expect(section.spots.count()).toBe(100);
     
     console.dir(event, {depth: 10});
 });
@@ -53,7 +51,7 @@ test('Deve publicar todos os itens do evento', () => {
 
     expect(event.is_published).toBe(true);
 
-    const [section1, section2] = event.sections.values();
+    const [section1, section2] = event.sections.getItems();
     expect(section1.is_published).toBe(true);
     expect(section2.is_published).toBe(true);
 

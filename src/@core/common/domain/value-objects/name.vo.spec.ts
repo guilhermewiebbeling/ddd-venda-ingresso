@@ -1,6 +1,6 @@
 import { Name } from "./name.vo";
 
-test('deve criar um nome válido', () => {
+test('Deve criar um nome válido', () => {
     const name = new Name('aaaaa');
     expect(name.value).toBe('aaaaa');
 })

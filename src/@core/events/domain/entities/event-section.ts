@@ -1,6 +1,7 @@
+import { AnyCollection, ICollection, MyCollectionFactory } from 'src/@core/common/domain/my-collection';
 import { Entity } from '../../../common/domain/entity';
 import Uuid from '../../../common/domain/value-objects/uuid.vo';
-import { EventSpot } from './event-spot';
+import { EventSpot, EventSpotId } from './event-spot';
 
 
 export class EventSectionId extends Uuid {}
@@ -20,7 +21,6 @@ export type EventSectionConstructorProps = {
   total_spots: number;
   total_spots_reserved: number;
   price: number;
-  spots?: Set<EventSpot>;
 };
 
 export class EventSection extends Entity {
@@ -31,7 +31,7 @@ export class EventSection extends Entity {
   total_spots: number;
   total_spots_reserved: number;
   price: number;
-  spots: Set<EventSpot>;
+  private _spots: ICollection<EventSpot>;
 
   constructor(props: EventSectionConstructorProps) {
     super();
@@ -45,7 +45,7 @@ export class EventSection extends Entity {
     this.total_spots = props.total_spots;
     this.total_spots_reserved = props.total_spots_reserved;
     this.price = props.price;
-    this.spots = props.spots ?? new Set<EventSpot>();
+    this._spots = MyCollectionFactory.create(this);
   }
 
   static create(command: EventSectionCreateCommand) {
@@ -77,6 +77,14 @@ export class EventSection extends Entity {
     this.price = price;
   }
 
+  changeLocation(command: { spot_id: EventSpotId; location: string }) {
+    const spot = this.spots.find((spot) => spot.id.equals(command.spot_id));
+    if (!spot) {
+      throw new Error('Spot not found');
+    }
+    spot.changeLocation(command.location);
+  }
+
   publishAll() {
     this.publish();
     this.spots.forEach((spot) => spot.publish());
@@ -93,6 +101,14 @@ export class EventSection extends Entity {
 
   unPublish() {
     this.is_published = false;
+  }
+
+  get spots(): ICollection<EventSpot> {
+    return this._spots;
+  }
+
+  set spots(spots: AnyCollection<EventSpot>) {
+    this._spots = MyCollectionFactory.createFrom(spots);
   }
 
   toJSON() {
