@@ -2,7 +2,7 @@ import { MikroORM, MySqlDriver } from "@mikro-orm/mysql"
 import { EventSchema, EventSectionSchema, EventSpotSchema, PartnerSchema } from "../../schemas";
 import { EventMysqlRepository } from "../event-mysql.repository";
 import { PartnerMysqlRepository } from "../partner-mysql.repository";
-import { Partner } from "src/@core/events/domain/entities/partner.entity";
+import { Partner } from "../../../../domain/entities/partner.entity";
 
 test('Event repository', async () => {
 
@@ -23,18 +23,18 @@ test('Event repository', async () => {
     const partnerRepo = new PartnerMysqlRepository(em);
     const eventRepo = new EventMysqlRepository(em);
 
-    const partner = Partner.create({name: 'Parceiro 1'});
+    const partner = Partner.create({name: 'Partner 1'});
     await partnerRepo.add(partner);
     
     const event = partner.initEvent({
-        name: 'Evento 1',
-        description: 'Descrição do evento 1',
+        name: 'Event 1',
+        description: 'Event description 1',
         date: new Date(),
     });
 
     event.addSection({
-        name: 'Seção 1',
-        description: 'Descrição da seção 1',
+        name: 'Section 1',
+        description: 'Section description',
         total_spots: 100,
         price: 1000
     });

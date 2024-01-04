@@ -2,7 +2,7 @@ import { MikroORM, MySqlDriver } from "@mikro-orm/mysql"
 import { PartnerSchema } from "./schemas"
 import { Partner } from "../../domain/entities/partner.entity";
 
-test('Deve criar um parceiro', async () => {
+test('Must create a partner', async () => {
     const orm = await MikroORM.init<MySqlDriver>({
         type: 'mysql',
         host: 'localhost',
@@ -17,7 +17,7 @@ test('Deve criar um parceiro', async () => {
     await orm.schema.refreshDatabase();
     const em = orm.em.fork();
 
-    const partner = Partner.create({name: 'Parceiro 1'});
+    const partner = Partner.create({name: 'Partner 1'});
     console.log(partner);
 
     em.persist(partner);

@@ -1,4 +1,4 @@
-import { IUnitOfWork } from "src/@core/common/application/unit-of-work.interface";
+import { IUnitOfWork } from "../../common/application/unit-of-work.interface";
 import { IEventRepository } from "../domain/repositories/event-repository.interface";
 import { IPartnerRepository } from "../domain/repositories/partner-repository.interface";
 import { EventSectionId } from "../domain/entities/event-section";

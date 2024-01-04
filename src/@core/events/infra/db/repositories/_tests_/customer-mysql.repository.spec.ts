@@ -1,6 +1,6 @@
 import { MikroORM, MySqlDriver } from "@mikro-orm/mysql"
 import { CustomerSchema } from "../../schemas";
-import { Customer } from "src/@core/events/domain/entities/customer.entity";
+import { Customer } from "../../../../domain/entities/customer.entity";
 import { CustomerMysqlRepository } from "../customer-mysql.repository";
 
 test('Customer repository', async () => {
@@ -21,7 +21,7 @@ test('Customer repository', async () => {
     const customerRepo = new CustomerMysqlRepository(em);
 
     const customer = Customer.create({
-        name: 'João',
+        name: 'Customer 1',
         cpf: '166.695.020-36'
     });
     await customerRepo.add(customer);
@@ -33,7 +33,7 @@ test('Customer repository', async () => {
     expect(customerFound.name).toBe(customer.name);
     expect(customerFound.cpf.value).toBe('16669502036');
 
-    customer.changeName('Parceiro 2');
+    customer.changeName('Customer 2');
     await customerRepo.add(customer);
     await em.flush();
     await em.clear();

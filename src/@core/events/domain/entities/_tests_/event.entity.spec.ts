@@ -1,17 +1,17 @@
 import { Event } from "../event.entity";
 import { PartnerId } from "../partner.entity";
 
-test('Deve criar um evento', () => {
+test('Must create an event', () => {
     const event = Event.create({
-        name: 'Evento 1',
-        description: 'Descrição do evento 1',
+        name: 'Event 1',
+        description: 'Event description',
         date: new Date(),
         partner_id: new PartnerId()
     });
 
     event.addSection({
-        name: 'Seção 1',
-        description: 'Descrição da seção 1',
+        name: 'Section 1',
+        description: 'Section description',
         total_spots: 100,
         price: 1000
     });
@@ -25,24 +25,24 @@ test('Deve criar um evento', () => {
     console.dir(event, {depth: 10});
 });
 
-test('Deve publicar todos os itens do evento', () => {
+test('Must publish all event items', () => {
     const event = Event.create({
-        name: 'Evento 1',
-        description: 'Descrição do evento 1',
+        name: 'Event 1',
+        description: 'Event description',
         date: new Date(),
         partner_id: new PartnerId()
     });
 
     event.addSection({
-        name: 'Sessão 1',
-        description: 'Descrição da sessão 1',
+        name: 'Section 1',
+        description: 'Section description',
         total_spots: 100,
         price: 1000
     });
 
     event.addSection({
-        name: 'Sessão 2',
-        description: 'Descrição da sessão 2',
+        name: 'Section 2',
+        description: 'Section 2 description',
         total_spots: 1000,
         price: 50
     });

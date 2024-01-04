@@ -1,4 +1,4 @@
-import { AnyCollection, ICollection, MyCollectionFactory } from 'src/@core/common/domain/my-collection';
+import { AnyCollection, ICollection, MyCollectionFactory } from '../../../common/domain/my-collection';
 import { Entity } from '../../../common/domain/entity';
 import Uuid from '../../../common/domain/value-objects/uuid.vo';
 import { EventSpot, EventSpotId } from './event-spot';
@@ -101,6 +101,39 @@ export class EventSection extends Entity {
 
   unPublish() {
     this.is_published = false;
+  }
+
+  allowReserveSpot(spot_id: EventSpotId) {
+    if (!this.is_published) {
+      return false;
+    }
+
+    const spot = this.spots.find((spot) => spot.id.equals(spot_id));
+
+    if (!spot) {
+      throw new Error('Spot not found');
+    }
+
+    if (spot.is_reserved) {
+      return false;
+    }
+
+    if (!spot.is_published) {
+      return false;
+    }
+
+    return true;
+  }
+
+  markSpotAsReserved(spot_id: EventSpotId) {
+    const spot = this.spots.find((spot) => spot.id.equals(spot_id));
+    if (!spot) {
+      throw new Error('Spot not found');
+    }
+    if (spot.is_reserved) {
+      throw new Error('Spot already reserved');
+    }
+    spot.markAsReserved();
   }
 
   get spots(): ICollection<EventSpot> {

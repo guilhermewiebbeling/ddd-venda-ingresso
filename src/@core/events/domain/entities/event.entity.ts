@@ -2,7 +2,7 @@ import { AggregateRoot } from '../../../common/domain/aggregate-root';
 import { PartnerId } from './partner.entity';
 import Uuid from '../../../common/domain/value-objects/uuid.vo';
 import { EventSection, EventSectionId } from './event-section';
-import { AnyCollection, ICollection, MyCollectionFactory } from 'src/@core/common/domain/my-collection';
+import { AnyCollection, ICollection, MyCollectionFactory } from '../../../common/domain/my-collection';
 import { EventSpotId } from './event-spot';
 
 
@@ -138,6 +138,32 @@ export class Event extends AggregateRoot {
 
   unPublish() {
     this.is_published = false;
+  }
+
+  allowReserveSpot(data: { section_id: EventSectionId; spot_id: EventSpotId }) {
+    if (!this.is_published) {
+      return false;
+    }
+
+    const section = this.sections.find((s) => s.id.equals(data.section_id));
+    if (!section) {
+      throw new Error('Section not found');
+    }
+
+    return section.allowReserveSpot(data.spot_id);
+  }
+
+  markSpotAsReserved(command: {
+    section_id: EventSectionId;
+    spot_id: EventSpotId;
+  }) {
+    const section = this.sections.find((s) => s.id.equals(command.section_id));
+
+    if (!section) {
+      throw new Error('Section not found');
+    }
+
+    section.markSpotAsReserved(command.spot_id);
   }
 
   get sections(): ICollection<EventSection> {

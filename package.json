@@ -20,9 +20,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@mikro-orm/cli": "^5.9.4",
-    "@mikro-orm/core": "^5.9.4",
-    "@mikro-orm/mysql": "^5.9.4",
+    "@mikro-orm/cli": "^5.9.7",
+    "@mikro-orm/core": "^5.9.7",
+    "@mikro-orm/mysql": "^5.9.7",
     "@mikro-orm/nestjs": "^5.2.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
@@ -76,5 +76,12 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./src/mikro-orm.config.ts",
+      "./dist/mikro-orm.config.js"
+    ]
   }
 }

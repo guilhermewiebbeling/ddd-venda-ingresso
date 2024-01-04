@@ -10,9 +10,9 @@ import { EventSectionIdSchemaType } from './types/event-section-id.schema-type';
 import { EventSpot } from '../../domain/entities/event-spot';
 import { EventSpotIdSchemaType } from './types/event-spot-id.schema-type';
 import { Event } from '../../domain/entities/event.entity';
-//import { SpotReservation } from '../../domain/entities/spot-reservation.entity';
-//import { Order, OrderStatus } from '../../domain/entities/order.entity';
-//import { OrderIdSchemaType } from './types/order-id.schema-type';
+import { OrderIdSchemaType } from './types/order-id.schema-type';
+import { Order, OrderStatus } from '../../domain/entities/order.entity';
+import { SpotReservation } from '../../domain/entities/spot-reservation.entity';
 
 export const PartnerSchema = new EntitySchema<Partner>({
   class: Partner,
@@ -116,7 +116,7 @@ export const EventSpotSchema = new EntitySchema<EventSpot>({
   },
 });
 
-/*export const SpotReservationSchema = new EntitySchema<SpotReservation>({
+export const SpotReservationSchema = new EntitySchema<SpotReservation>({
   class: SpotReservation,
   properties: {
     spot_id: {
@@ -164,4 +164,4 @@ export const OrderSchema = new EntitySchema<Order>({
       customType: new EventSpotIdSchemaType(),
     },
   },
-});*/
+});

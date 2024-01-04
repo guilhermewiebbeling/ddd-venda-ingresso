@@ -1,0 +1,31 @@
+###
+GET http://localhost:3000
+
+###
+GET http://localhost:3000/partners
+
+###
+POST http://localhost:3000/partners
+Content-Type: application/json
+
+{
+    "name": "Partner 1",
+}
+
+###
+@partner_id = 076a2ae5-b4ed-438d-89fc-e1a4b42372ba
+
+###
+GET http://localhost:3000/customers
+
+###
+POST http://localhost:3000/customers
+Content-Type: application/json
+
+{
+    "name": "Customer 1",
+    "cpf": "592.110.870-74"
+}
+
+###
+@customer_id = 61f0ff6e-0bb1-4635-8899-4b88ce46975b

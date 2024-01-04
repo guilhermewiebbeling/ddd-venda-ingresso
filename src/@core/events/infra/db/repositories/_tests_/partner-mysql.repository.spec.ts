@@ -1,6 +1,6 @@
 import { MikroORM, MySqlDriver } from "@mikro-orm/mysql"
 import { PartnerSchema } from "../../schemas";
-import { Partner } from "src/@core/events/domain/entities/partner.entity";
+import { Partner } from "../../../../domain/entities/partner.entity";
 import { PartnerMysqlRepository } from "../partner-mysql.repository";
 
 test('Partner repository', async () => {
@@ -20,7 +20,7 @@ test('Partner repository', async () => {
     const em = orm.em.fork();
     const partnerRepo = new PartnerMysqlRepository(em);
 
-    const partner = Partner.create({name: 'Parceiro 1'});
+    const partner = Partner.create({name: 'Partner 1'});
     await partnerRepo.add(partner);
     await em.flush();
     await em.clear();
@@ -29,7 +29,7 @@ test('Partner repository', async () => {
     expect(partnerFound.id.equals(partner.id)).toBeTruthy();
     expect(partnerFound.name).toBe(partner.name);
 
-    partner.changeName('Parceiro 2');
+    partner.changeName('Partner 2');
     await partnerRepo.add(partner);
     await em.flush();
     await em.clear();

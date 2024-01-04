@@ -1,13 +1,13 @@
 import { Partner } from "../partner.entity";
 
-test('Deve criar um evento', () => {
+test('Must create an event', () => {
     const partner = Partner.create({
-        name: 'Parceiro 1',
+        name: 'Partner 1',
     });
 
     const event = partner.initEvent({
-        name: 'Evento 1',
-        description: 'Descrição do evento 1',
+        name: 'Event 1',
+        description: 'Event description',
         date: new Date(),
     });
 
