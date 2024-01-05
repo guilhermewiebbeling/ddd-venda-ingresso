@@ -9,11 +9,11 @@ POST http://localhost:3000/partners
 Content-Type: application/json
 
 {
-    "name": "Partner 1",
+    "name": "Partner 1"
 }
 
 ###
-@partner_id = 076a2ae5-b4ed-438d-89fc-e1a4b42372ba
+@partner_id = a4599cee-d7bc-4861-9494-c9eb07b64839
 
 ###
 GET http://localhost:3000/customers
@@ -28,4 +28,77 @@ Content-Type: application/json
 }
 
 ###
-@customer_id = 61f0ff6e-0bb1-4635-8899-4b88ce46975b
+@customer_id = b393b540-9c41-41cd-8a41-6cd05fcf5f1a
+
+###
+GET http://localhost:3000/events
+
+###
+POST http://localhost:3000/events
+Content-Type: application/json
+
+{
+    "name": "Event 1",
+    "description": "Description 1",
+    "date": "2020-01-01T00:00:00.000Z",
+    "partner_id": "{{partner_id}}"
+}
+
+###
+@event_id = 7e2c025d-e5a8-41fb-b2ea-2bc4086c5b4a
+
+###
+GET http://localhost:3000/events/{{event_id}}/sections
+
+###
+POST http://localhost:3000/events/{{event_id}}/sections
+Content-Type: application/json
+
+{
+    "name": "Section 1",
+    "description": "Description 1",
+    "total_spots": 1,
+    "price": 200
+}
+
+###
+PUT http://localhost:3000/events/{{event_id}}/publish-all
+
+###
+@section_id = 4178025b-680a-47ed-9a2c-e3517f160764
+
+###
+PUT http://localhost:3000/events/{{event_id}}/sections/{{section_id}}
+Content-Type: application/json
+
+{
+    "name": "Section 1 updateddddd",
+    "description": "Description 1 updatedddd"
+}
+
+###
+GET http://localhost:3000/events/{{event_id}}/sections/{{section_id}}/spots
+
+@spot_id = 6dd8a564-4c94-44bd-a0ff-5ceaf702c163
+
+###
+PUT http://localhost:3000/events/{{event_id}}/sections/{{section_id}}/spots/{{spot_id}}
+Content-Type: application/json
+
+{
+    "location": "Location 1 updateddddqqqq"
+}
+
+###
+GET http://localhost:3000/events/{{event_id}}/orders
+
+###
+POST http://localhost:3000/events/{{event_id}}/orders
+Content-Type: application/json
+
+{
+    "customer_id": "{{customer_id}}",
+    "section_id": "{{section_id}}",
+    "spot_id": "6dd8a564-4c94-44bd-a0ff-5ceaf702c163",
+    "card_token": "tok_visa"
+}

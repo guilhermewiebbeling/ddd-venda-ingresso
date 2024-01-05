@@ -10,7 +10,7 @@ export class EventService {
         private parnterRepo: IPartnerRepository, 
         private uow: IUnitOfWork) {}
 
-    list() {
+    findEvents() {
         return this.eventRepo.findAll();
     }
 
@@ -57,7 +57,7 @@ export class EventService {
 
     async addSection(input: {
         name: string, 
-        description: string, 
+        description?: string, 
         total_spots: number, 
         price: number, 
         event_id: string
@@ -82,12 +82,10 @@ export class EventService {
     }
 
     async updateSection(input: {
-        name: string, 
-        description: string, 
-        total_spots: number, 
-        price: number, 
-        event_id: string,
-        section_id: string
+        name: string;
+        description?: string | null;
+        event_id: string;
+        section_id: string;
     }) {
         const event = await this.eventRepo.findById(input.event_id);
 
@@ -95,23 +93,15 @@ export class EventService {
             throw new Error('Event not found');
         }
 
-        const section = event.changeSectionInformation({
-            section_id: new EventSectionId(input.section_id),
-            name: input.name,
-            description: input.description
-        })
-
-        event.addSection({
+        const sectionId = new EventSectionId(input.section_id);
+        event.changeSectionInformation({
+            section_id: sectionId,
             name: input.name,
             description: input.description,
-            total_spots: input.total_spots,
-            price: input.price,
         });
-
         await this.eventRepo.add(event);
         await this.uow.commit();
-
-        return event;
+        return event.sections;
     }
 
     async findSpots(input: { event_id: string; section_id: string }) {
