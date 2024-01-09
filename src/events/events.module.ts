@@ -1,6 +1,6 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EntityManager } from "@mikro-orm/mysql";
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { 
     CustomerSchema, 
     EventSchema, 
@@ -32,6 +32,12 @@ import { EventsController } from './events/events.controller';
 import { EventSpotsController } from './events/event-spots.controller';
 import { OrdersController } from './orders/orders.controller';
 import { EventSectionsController } from './events/event-sections.controller';
+import { ApplicationService } from '../@core/common/application/application.service';
+import { ApplicationModule } from '../application/application.module';
+import { DomainEventManager } from '../@core/common/domain/domain-event-manager';
+import { PartnerCreatedEvent } from '../@core/events/domain/domain-events/partner-created.event';
+import { MyHandlerHandler } from '../@core/events/application/handlers/my-handler.handler';
+import { ModuleRef } from '@nestjs/core';
 
 @Module({
     imports: [
@@ -43,7 +49,8 @@ import { EventSectionsController } from './events/event-sections.controller';
             EventSpotSchema,
             OrderSchema,
             SpotReservationSchema,
-        ])
+        ]),
+        ApplicationModule
     ],
     providers: [
         {
@@ -73,9 +80,9 @@ import { EventSectionsController } from './events/event-sections.controller';
         },
         {
             provide: PartnerService,
-            useFactory: (partnerRepo: IPartnerRepository, uow: IUnitOfWork) => new PartnerService(partnerRepo, uow),
-            inject: ['IPartnerRepository', 'IUnitOfWork'],
-        },
+            useFactory: (partnerRepo: IPartnerRepository, appService: ApplicationService) => new PartnerService(partnerRepo, appService),
+            inject: ['IPartnerRepository', ApplicationService],
+          },
         {
             provide: CustomerService,
             useFactory: (customerRepo: ICustomerRepository, uow: IUnitOfWork) => new CustomerService(customerRepo, uow),
@@ -114,6 +121,11 @@ import { EventSectionsController } from './events/event-sections.controller';
                 PaymentGateway,
             ],
           },
+          {
+            provide: MyHandlerHandler,
+            useFactory: (partnerRepo: IPartnerRepository, domainEventManager: DomainEventManager) => { return new MyHandlerHandler(partnerRepo, domainEventManager) },
+            inject: ['IPartnerRepository', DomainEventManager]
+          }
     ],
     controllers: [
         PartnersController, 
@@ -124,4 +136,19 @@ import { EventSectionsController } from './events/event-sections.controller';
         OrdersController
     ]
 })
-export class EventsModule {}
+export class EventsModule implements OnModuleInit {
+
+    constructor(
+        private readonly domainEventManager: DomainEventManager, 
+        private moduleRef: ModuleRef
+    ) {}
+
+    onModuleInit() {
+        MyHandlerHandler.listensTo().forEach((eventName: string) => {
+            this.domainEventManager.register(eventName, async (event) => {
+                const handler = await this.moduleRef.resolve(MyHandlerHandler);
+                await handler.handle(event);
+            });
+        })
+    }
+}

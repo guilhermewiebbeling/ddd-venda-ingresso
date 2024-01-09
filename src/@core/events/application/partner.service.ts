@@ -1,35 +1,36 @@
-import { IUnitOfWork } from "../../common/application/unit-of-work.interface";
+import { ApplicationService } from "src/@core/common/application/application.service";
 import { Partner } from "../domain/entities/partner.entity";
 import { IPartnerRepository } from "../domain/repositories/partner-repository.interface";
 
 export class PartnerService {
 
-    constructor(private partnerRepo: IPartnerRepository, private uow: IUnitOfWork) {}
+    constructor(private partnerRepo: IPartnerRepository, private applicationService: ApplicationService) {}
 
     list() {
         return this.partnerRepo.findAll();
     }
 
     async create(input: {name: string}) {
-        const partner = Partner.create(input);
-        this.partnerRepo.add(partner);
-        await this.uow.commit();
-        
-        return partner;
+        return await this.applicationService.run(async () => {
+            const partner = Partner.create(input);
+            this.partnerRepo.add(partner);
+            return partner;
+        });
     }
 
     async update(id: string, input : {name: string}) {
-        const partner = await this.partnerRepo.findById(id);
+        return await this.applicationService.run(async () => {
+            const partner = await this.partnerRepo.findById(id);
 
-        if (!partner) {
-            throw new Error('Partner not found');
-        }
+            if (!partner) {
+                throw new Error('Partner not found');
+            }
 
-        input.name && partner.changeName(input.name)
+            input.name && partner.changeName(input.name)
 
-        this.partnerRepo.add(partner);
-        await this.uow.commit();
-        
-        return partner;
+            this.partnerRepo.add(partner);
+            
+            return partner;
+        });
     }
 }
