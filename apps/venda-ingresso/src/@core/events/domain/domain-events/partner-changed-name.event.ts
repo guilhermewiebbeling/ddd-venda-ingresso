@@ -1,4 +1,4 @@
-import { IDomainEvent } from "src/@core/common/domain/domain-event";
+import { IDomainEvent } from "../../../../@core/common/domain/domain-event";
 import { PartnerId } from "../entities/partner.entity";
 
 export class PartnerChangedName implements IDomainEvent {

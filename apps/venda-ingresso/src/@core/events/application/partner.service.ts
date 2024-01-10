@@ -1,4 +1,4 @@
-import { ApplicationService } from "src/@core/common/application/application.service";
+import { ApplicationService } from "../../../@core/common/application/application.service";
 import { Partner } from "../domain/entities/partner.entity";
 import { IPartnerRepository } from "../domain/repositories/partner-repository.interface";
 
