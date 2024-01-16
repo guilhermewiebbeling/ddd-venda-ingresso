@@ -9,7 +9,7 @@ POST http://localhost:3000/partners
 Content-Type: application/json
 
 {
-    "name": "Partner 3"
+    "name": "Partner 1"
 }
 
 ###
